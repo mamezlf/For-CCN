@@ -1,3 +1,11 @@
+//Instructions for TMP
+//1. Choose the working folder in your computer.
+//2. Make an txt file called 'input.txt' and another file called 'output.txt', saved them in the working folder.
+//3. Copy and Paste the full timestamp text in the 'input.txt' file.
+//4. Run the program and follow the step shown.
+//5. The timestamps will show automatically in 'output.txt'.
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #define SIZE 256
