@@ -20,7 +20,6 @@ int FindSongNum(FILE *fp){
     int line=0;
     fp=fopen("input.txt","r");
     char buf[SIZE];
-
     if ((fp=fopen("input.txt","r"))==NULL){
         printf("failed to open the txt file.\n");
         return -1;
@@ -31,22 +30,48 @@ int FindSongNum(FILE *fp){
     }
 
     fclose(fp);
-    printf("SongNum=%d\n",line);
+    printf("\nSongNum=%d\n",line);
     return line;
 }
 
-void identifyCCN(struct song s[],int N,FILE *fp){
+void identifyCCN(struct song s[],int N,FILE *fp,FILE *bonus){
     int i;
     for(i=0;i<N&&fgets(s[i].str,sizeof(s[i].str),fp)!=NULL;i++){
-        printf("Did CCN join dancing song - %s",s[i].str);
-        printf("('1'= yes;'2'= no;'3'= bonusCCN;'0'= cancel)");
-        scanf("%d",&s[i].ans);    
+        printf("\nDid CCN join dancing song - %s",s[i].str);
+        printf("('1'= yes;'2'= no;'3'=bonusCCN;'0'= cancel): ");
+        scanf("%d",&s[i].ans);
+
+        while(s[i].ans==0||s[i].ans==3){
+            while(s[i].ans==0){
+                printf("change CCN info on the song- %s",s[i-1].str);
+                printf("('1'= did join;'2'= didn't join;): ");
+                scanf("%d",&s[i-1].ans);
+
+                printf("Did CCN join dancing song - %s",s[i].str);
+                printf("('1'= yes;'2'= no;'3'=bonusCCN;'0'= cancel): ");
+                scanf("%d",&s[i].ans);
+            }
+            while(s[i].ans==3){
+                int min,sec;
+                char tmp;
+                printf("please enter the bonus timestamps: \n");
+                scanf("%d%c%d",&min,&tmp,&sec);
+                fprintf(bonus, "%d%c%d\n",min,tmp,sec);
+                printf("added\n\n");
+
+                printf("Did CCN join dancing song - %s",s[i].str);
+                printf("('1'= yes;'2'= no;'3'=bonusCCN;'0'= cancel): ");
+                scanf("%d",&s[i].ans);
+            }    
+        }
+
     }
 }
 
 int main(void){
     FILE* fp;
     
+    /*Find SongNum*/
     int SongNum;
     SongNum= FindSongNum(fp);
 
@@ -54,22 +79,39 @@ int main(void){
     char str[SIZE];
     int a=0;
 
+    /*Main Part*/
     fp=fopen("input.txt","r");
 
     if (fp==NULL){
         printf("cannot open file\n");
         exit(1);
     }
-    identifyCCN(s,SongNum,fp);
+
+    FILE *bonus;
+    bonus=fopen("bonusCCN.txt","r");
+    if (bonus==NULL){
+        printf("cannot open file\n");
+        exit(1);
+    }
+
+    identifyCCN(s,SongNum,fp,bonus);
     fclose(fp);
 
     FILE *in;
     in=fopen("input.txt","r");
+    if (in==NULL){
+        printf("cannot open file\n");
+        exit(1);
+    }
     
     int i=0;
 
     FILE *out;
     out=fopen("output.txt","w");
+    if (out==NULL){
+        printf("cannot open file\n");
+        exit(1);
+    }
 
     fprintf(out,"Timestamps for CCN\n");
 
@@ -77,14 +119,12 @@ int main(void){
         if(s[i].ans==1){
             fprintf(out,"%s",s[i].str);
         }
-        
     }
-
 
     fclose(in);
     fclose(out);
 
-    printf("***succeeded***\n");
+    printf("\n***succeeded***\n");
     return 0;
 
 }
