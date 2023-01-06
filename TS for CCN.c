@@ -1,3 +1,5 @@
+//aiming to create ccn's ts easily and I call this program findccn.c lol
+
 //Instructions for TMP
 //1. Choose the working folder in your computer.
 //2. Make an txt file called 'input.txt' and another file called 'output.txt', saved them in the working folder.
